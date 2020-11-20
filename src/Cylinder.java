@@ -1,12 +1,23 @@
 public interface Cylinder {
-    public void moveFoward();
+    
+    public void moveForward();
+    
     public void moveBackward();
-    public void stopMoving();
-    public void gotoPostion();
+    
+    public void stop();
+    
+    public void gotoPosition(int position);
+    
     public int getPosition();
+    
     public boolean isMoving();
-    public boolean isMovingFoward();
+    
+    public boolean isMovingForward();
+    
     public boolean isMovingBackward();
+    
     public boolean isStopped();
+    
     public boolean packageGetDetected();
+    
 }

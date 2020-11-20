@@ -17,74 +17,74 @@ JNIEXPORT void JNICALL Java_SplitterLine_initializeHardwarePorts
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder1_moveForward
+ * Method:    cylinder1MoveForward
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder1_1moveForward
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder1MoveForward
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder1_moveBackward
+ * Method:    cylinder1MoveBackward
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder1_1moveBackward
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder1MoveBackward
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder1_stop
+ * Method:    cylinder1Stop
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder1_1stop
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder1Stop
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder2_moveForward
+ * Method:    cylinder2MoveForward
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder2_1moveForward
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder2MoveForward
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder2_moveBackward
+ * Method:    cylinder2MoveBackward
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder2_1moveBackward
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder2MoveBackward
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder2_stop
+ * Method:    cylinder2Stop
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder2_1stop
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder2Stop
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder3_moveForward
+ * Method:    cylinder3MoveForward
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder3_1moveForward
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder3MoveForward
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder3_moveBackward
+ * Method:    cylinder3MoveBackward
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder3_1moveBackward
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder3MoveBackward
   (JNIEnv *, jclass);
 
 /*
  * Class:     SplitterLine
- * Method:    cylinder3_stop
+ * Method:    cylinder3Stop
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_SplitterLine_cylinder3_1stop
+JNIEXPORT void JNICALL Java_SplitterLine_cylinder3Stop
   (JNIEnv *, jclass);
 
 /*
@@ -117,6 +117,126 @@ JNIEXPORT void JNICALL Java_SplitterLine_ledON
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_SplitterLine_ledOFF
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    getCylinder1Position
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_SplitterLine_getCylinder1Position
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder1_isMoving
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder1_1isMoving
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder1_isMovingForward
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder1_1isMovingForward
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder1_isMovingBackward
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder1_1isMovingBackward
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder1_isStopped
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder1_1isStopped
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    getCylinder2Position
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_SplitterLine_getCylinder2Position
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder2_isMoving
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder2_1isMoving
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder2_isMovingForward
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder2_1isMovingForward
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder2_isMovingBackward
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder2_1isMovingBackward
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder2_isStopped
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder2_1isStopped
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    getCylinder3Position
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_SplitterLine_getCylinder3Position
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder3_isMoving
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder3_1isMoving
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder3_isMovingForward
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder3_1isMovingForward
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder3_isMovingBackward
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder3_1isMovingBackward
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     SplitterLine
+ * Method:    cylinder3_isStopped
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_SplitterLine_cylinder3_1isStopped
   (JNIEnv *, jclass);
 
 /*
@@ -165,30 +285,6 @@ JNIEXPORT jboolean JNICALL Java_SplitterLine_getSwitchDock2
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_SplitterLine_getSwitchDock3
-  (JNIEnv *, jclass);
-
-/*
- * Class:     SplitterLine
- * Method:    cylinder1_getPosition
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_SplitterLine_cylinder1_1getPosition
-  (JNIEnv *, jclass);
-
-/*
- * Class:     SplitterLine
- * Method:    cylinder2_getPosition
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_SplitterLine_cylinder2_1getPosition
-  (JNIEnv *, jclass);
-
-/*
- * Class:     SplitterLine
- * Method:    cylinder3_getPosition
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_SplitterLine_cylinder3_1getPosition
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus
