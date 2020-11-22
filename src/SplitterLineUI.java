@@ -55,7 +55,8 @@ public class SplitterLineUI extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setMinimumSize(new java.awt.Dimension(77, 24));
+        jTextField1.setPreferredSize(new java.awt.Dimension(77, 24));
 
         javax.swing.GroupLayout PackagesLayout = new javax.swing.GroupLayout(Packages);
         Packages.setLayout(PackagesLayout);
