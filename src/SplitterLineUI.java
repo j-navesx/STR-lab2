@@ -34,6 +34,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
         PackageListing = new javax.swing.JScrollPane();
         packagesToProcess = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
         Maintenance = new javax.swing.JPanel();
         EmergencyButton = new javax.swing.JToggleButton();
         EmergencyButtonText = new javax.swing.JLabel();
@@ -54,13 +55,17 @@ public class SplitterLineUI extends javax.swing.JFrame {
             }
         });
 
+        jTextField1.setText("jTextField1");
+
         javax.swing.GroupLayout PackagesLayout = new javax.swing.GroupLayout(Packages);
         Packages.setLayout(PackagesLayout);
         PackagesLayout.setHorizontalGroup(
             PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PackagesLayout.createSequentialGroup()
                 .addGap(141, 141, 141)
-                .addComponent(jButton1)
+                .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
                 .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(306, 306, 306))
@@ -73,7 +78,9 @@ public class SplitterLineUI extends javax.swing.JFrame {
                         .addGap(65, 65, 65)
                         .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PackagesLayout.createSequentialGroup()
-                        .addGap(240, 240, 240)
+                        .addGap(210, 210, 210)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)))
                 .addContainerGap(320, Short.MAX_VALUE))
         );
@@ -174,9 +181,23 @@ public class SplitterLineUI extends javax.swing.JFrame {
     }//GEN-LAST:event_EmergencyButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Component[] list = packagesToProcess.getComponents();
-        Component a;
-        list[list.length-1] = a;
+       try{
+            List<String> list = new ArrayList<>(); 
+            for(int i = 0; i< packagesToProcess.getModel().getSize();i++){
+                list.add(packagesToProcess.getModel().getElementAt(i));
+            }
+            if (jTextField1.getText().length() != 0){
+                list.add(jTextField1.getText());
+            }     
+            jTextField1.setText("");
+            String[] nlist = new String[list.size()];
+            nlist = list.toArray(nlist);
+            
+            packagesToProcess.setListData(nlist);
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -239,6 +260,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
     private javax.swing.JPanel Packages;
     private javax.swing.JButton jButton1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JList<String> packagesToProcess;
     // End of variables declaration//GEN-END:variables
 
