@@ -1,3 +1,7 @@
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Cylinder1 implements Cylinder {
     
     @Override
@@ -34,6 +38,11 @@ public class Cylinder1 implements Cylinder {
         }
         while(getPosition() != position) {
             Thread.yield();
+        }
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Cylinder1.class.getName()).log(Level.SEVERE, null, ex);
         }
         stop();
     }

@@ -1,5 +1,6 @@
 
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
@@ -96,33 +97,54 @@ public class mainThread extends Thread{
     @Override
     public void run() {
         mech.moveConveyor();
+        DT1.start();
+        DT2.start();
+        DT3.start();
+        
         Semaphore sem= getSemSynch();
+        Semaphore semDT1= DT1.getSemSynch();
+        Semaphore semDT2= DT2.getSemSynch();
         int type= -1;
+        int auxType= -1;
+  
         this.setInterrupted(false);
         
         while(!interrupted) {
             try {
                 sem.acquire();
+                while(cyl2.packageGetDetected() || cyl2.getPosition() != 0) {
+                    Thread.sleep(500);
+                }
+                
+                while(!cyl3.packageGetDetected() && auxType == 3) {
+                    Thread.yield();
+                }
+                
                 if(!interrupted) {
                     type = getPackage();   
 
                     if(type == 1) {
                         if(DT1.getDockState()) {
-                            DT1.start();
-                            //DT1.join();
+                            auxType= 1;
+                            semDT1.release();
                         }
                         else {
+                            auxType= 3;
                             //dock 3
                         }
                     }
                     if(type == 2) {
                         if(DT2.getDockState()) {
-                            DT2.start();
-                            //DT2.join();
+                            auxType= 2;
+                            semDT2.release();
                         }
                         else {
+                            auxType= 3;
                             //dock 3
                         }
+                    }
+                    if(type == 3) {
+                        auxType= 3;
                     }
                 } 
             } catch (InterruptedException ex) {
@@ -137,8 +159,17 @@ public class mainThread extends Thread{
         Calibration();
         worker.start();
         
-        worker.setPackage();
-        worker.setPackage();
+        int t= -1;
+        
+        while(t != 0) {
+            System.out.print("Enter an option then enter : ");
+            Scanner scan = new Scanner (System.in);
+            t = scan.nextInt(); scan.nextLine();
+            switch(t) {
+                case 1: worker.setPackage(); break;
+                case 2: break;
+            }
+        }
         
         try {
             worker.join();
