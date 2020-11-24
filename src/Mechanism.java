@@ -6,9 +6,9 @@ public class Mechanism {
         SplitterLine.conveyorStop();
     }
     public void swithLed(boolean state) {
-        if(!state)
-            SplitterLine.ledON();
         if(state)
+            SplitterLine.ledON();
+        if(!state)
             SplitterLine.ledOFF();
     }
     public boolean switchDock1Pressed() {

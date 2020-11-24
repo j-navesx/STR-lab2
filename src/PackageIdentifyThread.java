@@ -12,6 +12,10 @@ public class PackageIdentifyThread extends Thread{
         boolean sensor1 = false;
         boolean sensor2 = false;
         
+        while(cyl_2.packageGetDetected()) {
+            Thread.yield();
+        }
+        
         while(!cyl_2.packageGetDetected()) {
             if(!sensor1 && SplitterLine.getIdentificationSensors() == 1) {
                 sensor1 = true;
@@ -22,6 +26,5 @@ public class PackageIdentifyThread extends Thread{
                 pkgType++;
             }
         }
-        System.out.println(pkgType);
     }
 }
