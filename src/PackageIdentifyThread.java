@@ -22,6 +22,5 @@ public class PackageIdentifyThread extends Thread{
                 pkgType++;
             }
         }
-        System.out.println(pkgType);
     }
 }

@@ -19,5 +19,4 @@ public interface Cylinder {
     public boolean isStopped();
     
     public boolean packageGetDetected();
-    
 }
