@@ -17,6 +17,7 @@ public class mainThread extends Thread{
     private dockThread DT2 = null;
     private dockThread DT3 = null;
     private Mechanism mech = null;
+    private int packageType = -1;
     
     public mainThread() {
         this.semSynch= new Semaphore(0);
@@ -72,6 +73,10 @@ public class mainThread extends Thread{
         return type;
     }
     
+    public int getPackageType(){
+        return packageType; 
+    }
+    
     static public void Calibration() {
         Cylinder1 cyl1= new Cylinder1();
         Cylinder2 cyl2= new Cylinder2();
@@ -121,8 +126,10 @@ public class mainThread extends Thread{
                 }
                 
                 if(!interrupted) {
+                    this.packageType = -1;
                     type = getPackage();   
-
+                    this.packageType = type;
+                    
                     if(type == 1) {
                         if(DT1.getDockState()) {
                             auxType= 1;

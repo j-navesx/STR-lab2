@@ -33,8 +33,8 @@ public class SplitterLineUI extends javax.swing.JFrame {
         Packages = new javax.swing.JPanel();
         PackageListing = new javax.swing.JScrollPane();
         packagesToProcess = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        newPackageButton = new javax.swing.JButton();
+        packetProgressBar = new javax.swing.JProgressBar();
         Maintenance = new javax.swing.JPanel();
         EmergencyButton = new javax.swing.JToggleButton();
         EmergencyButtonText = new javax.swing.JLabel();
@@ -45,45 +45,45 @@ public class SplitterLineUI extends javax.swing.JFrame {
         setTitle("SplitterLine Interface");
         setSize(new java.awt.Dimension(800, 450));
 
+        packagesToProcess.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         packagesToProcess.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         PackageListing.setViewportView(packagesToProcess);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        newPackageButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        newPackageButton.setText("NEW PACKAGE");
+        newPackageButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                newPackageButtonActionPerformed(evt);
             }
         });
 
-        jTextField1.setMinimumSize(new java.awt.Dimension(77, 24));
-        jTextField1.setPreferredSize(new java.awt.Dimension(77, 24));
+        packetProgressBar.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        packetProgressBar.setPreferredSize(new java.awt.Dimension(146, 10));
 
         javax.swing.GroupLayout PackagesLayout = new javax.swing.GroupLayout(Packages);
         Packages.setLayout(PackagesLayout);
         PackagesLayout.setHorizontalGroup(
             PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PackagesLayout.createSequentialGroup()
-                .addGap(141, 141, 141)
-                .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
-                .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(306, 306, 306))
+                .addGap(59, 59, 59)
+                .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(newPackageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(packetProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
+                .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(154, 154, 154))
         );
         PackagesLayout.setVerticalGroup(
             PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PackagesLayout.createSequentialGroup()
+                .addGap(65, 65, 65)
                 .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(PackagesLayout.createSequentialGroup()
-                        .addGap(65, 65, 65)
-                        .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(PackagesLayout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
-                .addContainerGap(320, Short.MAX_VALUE))
+                        .addComponent(newPackageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(packetProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Package Control", Packages);
@@ -181,25 +181,18 @@ public class SplitterLineUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_EmergencyButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       try{
-            List<String> list = new ArrayList<>(); 
-            for(int i = 0; i< packagesToProcess.getModel().getSize();i++){
-                list.add(packagesToProcess.getModel().getElementAt(i));
-            }
-            if (jTextField1.getText().length() != 0){
-                list.add(jTextField1.getText());
-            }     
-            jTextField1.setText("");
-            String[] nlist = new String[list.size()];
-            nlist = list.toArray(nlist);
-            
-            packagesToProcess.setListData(nlist);
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void newPackageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPackageButtonActionPerformed
+        packetProgressBar.setValue(0);
+        //getPacket()
+        packetProgressBar.setValue(10);
+        //getIdentification()
+        //first mag sensor packetProgressBar.setValue(30);
+        //Gate sensor packetProgressBar.setValue(70);
+        //sleep(10)
+        //packetProgressBar.setValue(100);
+        //sleep(10)
+        
+    }//GEN-LAST:event_newPackageButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -234,6 +227,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
                 new SplitterLineUI().setVisible(true);
             }
         });
+        
     }
 
     private void emergency_meeting(){
@@ -248,6 +242,26 @@ public class SplitterLineUI extends javax.swing.JFrame {
         }
     }
     
+    private void newPacketReg(int type){
+        try{
+            List<Packet> list = new ArrayList<>(); 
+            for(int i = 0; i< packagesToProcess.getModel().getSize();i++){
+                list.add(packagesToProcess.getModel().getElementAt(i));
+            }
+            
+            Packet newP = new Packet(type);
+            list.add(newP);
+            
+            Packet[] nlist = new Packet[list.size()];
+            nlist = list.toArray(nlist);
+            
+            packagesToProcess.setListData(nlist);
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    
     private Icon EmergencyButtonNormal = new ImageIcon("./images/ButtonNormal.png");
     private Icon EmergencyButtonPressed = new ImageIcon("./images/ButtonPressed.png");
     
@@ -259,10 +273,10 @@ public class SplitterLineUI extends javax.swing.JFrame {
     private javax.swing.JPanel Maintenance;
     private javax.swing.JScrollPane PackageListing;
     private javax.swing.JPanel Packages;
-    private javax.swing.JButton jButton1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JList<String> packagesToProcess;
+    private javax.swing.JButton newPackageButton;
+    private javax.swing.JList<Packet> packagesToProcess;
+    private javax.swing.JProgressBar packetProgressBar;
     // End of variables declaration//GEN-END:variables
 
 }
