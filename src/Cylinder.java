@@ -10,6 +10,8 @@ public interface Cylinder {
     
     public int getPosition();
     
+    public int getPkgNumber();
+    
     public boolean isMoving();
     
     public boolean isMovingForward();

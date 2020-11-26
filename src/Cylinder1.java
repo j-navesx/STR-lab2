@@ -25,6 +25,11 @@ public class Cylinder1 implements Cylinder {
     }
     
     @Override
+    public int getPkgNumber() {
+        throw new UnsupportedOperationException("Opertion not supported for cylinder1.");
+    }
+    
+    @Override
     public void gotoPosition(int position) {
         //TODO:  movefrom 0 to 1 and vice-versa
         //this part is developed in Java

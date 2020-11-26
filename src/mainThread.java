@@ -2,6 +2,7 @@
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,8 @@ public class mainThread extends Thread{
     private int packageType = -1;
     
     public mainThread() {
+        this.mech = new Mechanism();
+        
         this.semSynch= new Semaphore(0);
         
         this.cyl1= new Cylinder1();
@@ -29,8 +32,6 @@ public class mainThread extends Thread{
         this.DT1= new dockThread(cyl2);
         this.DT2= new dockThread(cyl3);
         this.DT3= new dockThread(cyl1);
-        
-        this.mech = new Mechanism();
     }
     
     @Override
@@ -109,8 +110,9 @@ public class mainThread extends Thread{
         Semaphore sem= getSemSynch();
         Semaphore semDT1= DT1.getSemSynch();
         Semaphore semDT2= DT2.getSemSynch();
+        ArrayBlockingQueue queueDT1= DT1.getQueue();
+        ArrayBlockingQueue queueDT2= DT2.getQueue();
         int type= -1;
-        int auxType= -1;
   
         this.setInterrupted(false);
         
@@ -121,10 +123,6 @@ public class mainThread extends Thread{
                     Thread.sleep(500);
                 }
                 
-                while(!cyl3.packageGetDetected() && auxType == 3) {
-                    Thread.yield();
-                }
-                
                 if(!interrupted) {
                     this.packageType = -1;
                     type = getPackage();   
@@ -132,26 +130,32 @@ public class mainThread extends Thread{
                     
                     if(type == 1) {
                         if(DT1.getDockState()) {
-                            auxType= 1;
+                            //dock 1
                             semDT1.release();
+                            queueDT1.add(type);
                         }
                         else {
-                            auxType= 3;
                             //dock 3
+                            semDT2.release();
+                            queueDT2.add(3);
                         }
                     }
                     if(type == 2) {
                         if(DT2.getDockState()) {
-                            auxType= 2;
+                            //dock 2
                             semDT2.release();
+                            queueDT2.add(type);
                         }
                         else {
-                            auxType= 3;
                             //dock 3
+                            semDT2.release();
+                            queueDT2.add(3);
                         }
                     }
                     if(type == 3) {
-                        auxType= 3;
+                        //dock 3
+                        semDT2.release();
+                        queueDT2.add(type);
                     }
                 } 
             } catch (InterruptedException ex) {
@@ -173,7 +177,12 @@ public class mainThread extends Thread{
             Scanner scan = new Scanner (System.in);
             t = scan.nextInt(); scan.nextLine();
             switch(t) {
-                case 1: worker.setPackage(); break;
+                case 1: worker.setPackage();
+                worker.setPackage(); 
+                worker.setPackage(); 
+                worker.setPackage(); 
+                worker.setPackage(); 
+                worker.setPackage(); break;
                 case 2: break;
             }
         }

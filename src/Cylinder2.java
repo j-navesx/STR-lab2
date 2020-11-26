@@ -21,6 +21,11 @@ public class Cylinder2 implements Cylinder {
     }
     
     @Override
+    public int getPkgNumber() {
+        return 1;
+    }
+    
+    @Override
     public void gotoPosition(int position) {
         //TODO:  movefrom 0 to 1 and vice-versa
         //this part is developed in Java
