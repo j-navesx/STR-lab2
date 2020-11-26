@@ -17,6 +17,9 @@ public class mainThread extends Thread{
     private dockThread DT1 = null;
     private dockThread DT2 = null;
     private dockThread DT3 = null;
+    private SwitchThread ST1 = null;
+    private SwitchThread ST2 = null;
+    private SwitchThread ST3 = null;
     private Mechanism mech = null;
     private int packageType = -1;
     
@@ -32,6 +35,10 @@ public class mainThread extends Thread{
         this.DT1= new dockThread(cyl2);
         this.DT2= new dockThread(cyl3);
         this.DT3= new dockThread(cyl1);
+        
+        this.ST1 = new SwitchThread(1, DT1);
+        this.ST2 = new SwitchThread(2, DT2);
+        this.ST3 = new SwitchThread(3, DT3);
     }
     
     @Override
@@ -106,6 +113,9 @@ public class mainThread extends Thread{
         DT1.start();
         DT2.start();
         DT3.start();
+        ST1.start();
+        ST2.start();
+        ST3.start();
         
         Semaphore sem= getSemSynch();
         Semaphore semDT1= DT1.getSemSynch();
@@ -119,7 +129,7 @@ public class mainThread extends Thread{
         while(!interrupted) {
             try {
                 sem.acquire();
-                while(cyl2.packageGetDetected() || cyl2.getPosition() != 0) {
+                while(cyl2.packageGetDetected() || cyl2.getPosition() != 0 || !DT3.getDockState()) {
                     Thread.sleep(500);
                 }
                 
@@ -177,13 +187,13 @@ public class mainThread extends Thread{
             Scanner scan = new Scanner (System.in);
             t = scan.nextInt(); scan.nextLine();
             switch(t) {
-                case 1: worker.setPackage();
+                case 2: worker.setPackage();
                 worker.setPackage(); 
                 worker.setPackage(); 
                 worker.setPackage(); 
                 worker.setPackage(); 
                 worker.setPackage(); break;
-                case 2: break;
+                case 1: worker.setPackage(); break;
             }
         }
         

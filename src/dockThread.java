@@ -31,8 +31,8 @@ public class dockThread extends Thread{
         return interrupted; 
     }
     
-    public void setDockState(boolean state) {
-        this.blocked = !state;
+    public void setDockState() {
+        this.blocked = !this.blocked;
     }
     
     public boolean getDockState() {
@@ -49,23 +49,28 @@ public class dockThread extends Thread{
                 //Received signal
                 sem.acquire();
 
-                //Wait for gate2
+                //Wait for gate2 to activate
                 while(!cyl.packageGetDetected()) {
                     Thread.yield();
                 }
-                   
-                if(queue.take() == cyl.getPkgNumber() && blocked == false) {
+                if(blocked == false) {
+                    if(queue.take() == cyl.getPkgNumber()) {
 
-                    CylinderThread ct =  new CylinderThread(cyl);
-                    ct.start();
+                        CylinderThread ct =  new CylinderThread(cyl);
+                        ct.start();
 
-                    try {
-                        ct.join();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(dockThread.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        try {
+                            ct.join();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(dockThread.class.getName()).log(Level.SEVERE, null, ex);
+                        }  
+                    } 
+                } 
+                else {
+                    queue.take();
                 }
                 
+                //Wait for gate2 to deactivate
                 while(cyl.packageGetDetected()) {
                     Thread.yield();
                 }
