@@ -32,9 +32,9 @@ public class mainThread extends Thread{
         this.cyl2= new Cylinder2();
         this.cyl3= new Cylinder3();
         
-        this.DT1= new dockThread(cyl2);
-        this.DT2= new dockThread(cyl3);
-        this.DT3= new dockThread(cyl1);
+        this.DT3= new dockThread(cyl1, null, false, mech);
+        this.DT1= new dockThread(cyl2, DT3, true, mech);
+        this.DT2= new dockThread(cyl3, DT3, true, mech);
         
         this.ST1 = new SwitchThread(1, DT1);
         this.ST2 = new SwitchThread(2, DT2);
@@ -129,7 +129,7 @@ public class mainThread extends Thread{
         while(!interrupted) {
             try {
                 sem.acquire();
-                while(cyl2.packageGetDetected() || cyl2.getPosition() != 0 || !DT3.getDockState()) {
+                while(cyl2.packageGetDetected() || cyl2.getPosition() != 0) {
                     Thread.sleep(500);
                 }
                 
