@@ -71,7 +71,6 @@ public class mainThread extends Thread{
         ct1.start();
         lit.start();
         
-        ct1.join();
         lit.join();
         
         type = lit.getpkgType();
