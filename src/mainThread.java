@@ -11,9 +11,9 @@ import java.util.logging.Logger;
 public class mainThread extends Thread{
     private boolean  interrupted;  
     private Semaphore semSynch = null;
-    Cylinder1 cyl1= null;
-    Cylinder2 cyl2= null;
-    Cylinder3 cyl3= null;
+    private Cylinder1 cyl1= null;
+    private Cylinder2 cyl2= null;
+    private Cylinder3 cyl3= null;
     private dockThread DT1 = null;
     private dockThread DT2 = null;
     private dockThread DT3 = null;
@@ -48,7 +48,37 @@ public class mainThread extends Thread{
     
     public void setInterrupted(boolean interrupted) {
         this.interrupted = interrupted;
-    }    
+    } 
+    
+    public Cylinder getCyl1() {
+        return this.cyl1;
+    }
+    
+    public Cylinder getCyl2() {
+        return this.cyl2;
+    }
+    
+    public Cylinder getCyl3() {
+        return this.cyl3;
+    }
+    
+    public Mechanism getMech() {
+        return this.mech;
+    }
+    
+    public void setEmergency() {
+        this.mech.stopConveyor();
+        this.cyl1.setEmergency();
+        this.cyl2.setEmergency();
+        this.cyl3.setEmergency();
+    }
+    
+    public void endEmergency() {
+        this.cyl1.endEmergency();
+        this.cyl2.endEmergency();
+        this.cyl3.endEmergency();
+        this.mech.moveConveyor();
+    }
     
     public Semaphore getSemSynch() {
         return semSynch;
@@ -71,7 +101,6 @@ public class mainThread extends Thread{
         ct1.start();
         lit.start();
         
-        ct1.join();
         lit.join();
         
         type = lit.getpkgType();
@@ -129,7 +158,7 @@ public class mainThread extends Thread{
         while(!interrupted) {
             try {
                 sem.acquire();
-                while(cyl2.packageGetDetected() || cyl2.getPosition() != 0) {
+                while(this.cyl2.packageGetDetected() || this.cyl2.getPosition() != 0) {
                     Thread.sleep(500);
                 }
                 

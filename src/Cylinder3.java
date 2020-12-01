@@ -1,4 +1,29 @@
+
+import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Cylinder3 implements Cylinder {
+    private Semaphore cylSem = null;
+    private boolean flag;
+    
+    public Cylinder3() {
+        this.cylSem = new Semaphore(0);
+        this.flag = false;
+    }
+    
+    public Semaphore getCylSem() {
+        return this.cylSem;
+    }
+    
+    public void setEmergency() {
+        this.flag = true;
+    }
+    
+    public void endEmergency() {
+        this.flag = false;
+        this.cylSem.release();
+    }
     
     @Override
     public void moveForward() {
@@ -30,6 +55,7 @@ public class Cylinder3 implements Cylinder {
         //TODO:  movefrom 0 to 1 and vice-versa
         //this part is developed in Java
         int crtPos= getPosition();
+        Semaphore sem= this.getCylSem();
         
         if(crtPos != position) {
             if(crtPos < position)
@@ -39,6 +65,21 @@ public class Cylinder3 implements Cylinder {
         }
         while(getPosition() != position) {
             Thread.yield();
+            if(flag) {
+                try {
+                    stop();
+                    sem.acquire();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Cylinder1.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                if(crtPos != position) {
+                    if(crtPos < position)
+                        moveForward();
+                    if(crtPos > position)
+                        moveBackward();
+                }
+            }
         }
         stop();
     }   
