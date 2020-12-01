@@ -13,6 +13,7 @@ public class dockThread extends Thread{
     private dockThread DT3 = null;
     private boolean flag;
     private Mechanism mech = null;
+    private ledThread LT = null;
     
     public dockThread(Cylinder cyl, dockThread DT, boolean flag, Mechanism mech) {
         this.semSynch= new Semaphore(0);
@@ -32,6 +33,10 @@ public class dockThread extends Thread{
         return queue;
     }
     
+    public ledThread getLT() {
+        return this.LT;
+    }
+    
     @Override
     public boolean isInterrupted() { 
         return interrupted; 
@@ -39,6 +44,15 @@ public class dockThread extends Thread{
     
     public void setDockState() {
         this.blocked = !this.blocked;
+        if(flag == false && blocked == true) {
+            this.LT = new ledThread(this.mech,500,1000); //on: 500 ms off: 1000 ms
+            this.LT.start();
+        }
+        else {
+            if(flag == false) {
+                this.LT.setLedOff();
+            }
+        }
     }
     
     public boolean getDockState() {
@@ -50,6 +64,8 @@ public class dockThread extends Thread{
     @Override
     public void run() {
         Semaphore sem= getSemSynch();
+        ledThread LT = null;
+        int ledAUX;
         while(!interrupted) {
             try {
                 //Received signal
@@ -80,7 +96,12 @@ public class dockThread extends Thread{
                     } 
                 } 
                 else {
-                    queue.take();
+                    ledAUX = queue.take();
+                    System.out.printf("\n%d",ledAUX);
+                    if(ledAUX != 3) {
+                        LT = new ledThread(this.mech,2000,0); //2000 milisecond impulse
+                        LT.start();
+                    }
                 }
                 
                 //Wait for gate2 to deactivate

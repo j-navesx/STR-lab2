@@ -7,7 +7,6 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class mainThread extends Thread{
     private boolean  interrupted;  
     private Semaphore semSynch = null;
@@ -175,8 +174,8 @@ public class mainThread extends Thread{
                         }
                         else {
                             //dock 3
-                            semDT2.release();
-                            queueDT2.add(3);
+                            semDT1.release();
+                            queueDT1.add(1);
                         }
                     }
                     if(type == 2) {
@@ -188,7 +187,7 @@ public class mainThread extends Thread{
                         else {
                             //dock 3
                             semDT2.release();
-                            queueDT2.add(3);
+                            queueDT2.add(2);
                         }
                     }
                     if(type == 3) {
@@ -208,6 +207,7 @@ public class mainThread extends Thread{
         SplitterLine.initializeHardwarePorts();
         Calibration();
         worker.start();
+        ledThread LT = null;
         
         int t= -1;
         
@@ -223,6 +223,7 @@ public class mainThread extends Thread{
                 worker.setPackage(); 
                 worker.setPackage(); break;
                 case 1: worker.setPackage(); break;
+                case 3: LT = new ledThread(worker.mech,1000,0); LT.start(); break;
             }
         }
         
