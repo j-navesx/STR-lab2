@@ -8,6 +8,10 @@ public interface Cylinder {
     
     public void gotoPosition(int position);
     
+    public void setEmergency();
+    
+    public void endEmergency();
+    
     public int getPosition();
     
     public int getPkgNumber();

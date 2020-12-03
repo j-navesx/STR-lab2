@@ -5,7 +5,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import sun.audio.AudioPlayer;
@@ -18,8 +24,16 @@ public class SplitterLineUI extends javax.swing.JFrame {
     /**
      * Creates new form SplitterLineUI
      */
+    
+    public mainThread worker;
+    private CalibrationThread calC1;
+    private CalibrationThread calC2;
+    private CalibrationThread calC3;
+    public PacketStatistics stats;
+    
     public SplitterLineUI() {
         initComponents();
+        this.worker = new mainThread();
     }
 
     /**
@@ -29,17 +43,172 @@ public class SplitterLineUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Calibration = new javax.swing.JFrame();
+        cyl1ButtonIn = new javax.swing.JButton();
+        calibrationTitleLabel = new javax.swing.JLabel();
+        gifPanel = new javax.swing.JPanel();
+        gifHolder = new javax.swing.JLabel();
+        cyl1Label = new javax.swing.JLabel();
+        cyl1ButtonOut = new javax.swing.JButton();
+        cyl2Label = new javax.swing.JLabel();
+        cyl2ButtonOut = new javax.swing.JButton();
+        cyl2ButtonIn = new javax.swing.JButton();
+        cyl3Label = new javax.swing.JLabel();
+        cyl3ButtonIn = new javax.swing.JButton();
+        cyl3ButtonOut = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         Packages = new javax.swing.JPanel();
         PackageListing = new javax.swing.JScrollPane();
         packagesToProcess = new javax.swing.JList<>();
         newPackageButton = new javax.swing.JButton();
-        packetProgressBar = new javax.swing.JProgressBar();
+        statisticsTitle = new javax.swing.JLabel();
+        totalPacketsLabel = new javax.swing.JLabel();
+        totalPacketsNumberLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        packageSelectedLabel = new javax.swing.JLabel();
+        packageSelectedTypeLabel = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        statA = new javax.swing.JLabel();
+        statB = new javax.swing.JLabel();
+        statC = new javax.swing.JLabel();
+        statAProgressBar = new javax.swing.JProgressBar();
+        statBProgressBar = new javax.swing.JProgressBar();
+        statCProgressBar = new javax.swing.JProgressBar();
         Maintenance = new javax.swing.JPanel();
         EmergencyButton = new javax.swing.JToggleButton();
         EmergencyButtonText = new javax.swing.JLabel();
         ConveyorText = new javax.swing.JLabel();
         ConveyorButton = new javax.swing.JToggleButton();
+        manualTextWarning = new javax.swing.JLabel();
+
+        Calibration.setTitle("Calibration");
+        Calibration.setPreferredSize(new java.awt.Dimension(800, 600));
+        Calibration.setSize(new java.awt.Dimension(800, 600));
+        Calibration.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                CalibrationWindowClosing(evt);
+            }
+        });
+
+        cyl1ButtonIn.setText("In");
+        cyl1ButtonIn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cyl1ButtonInActionPerformed(evt);
+            }
+        });
+
+        calibrationTitleLabel.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        calibrationTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        calibrationTitleLabel.setText("CALIBRATION");
+
+        gifPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        gifPanel.add(gifHolder, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 927, 316));
+
+        cyl1Label.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        cyl1Label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cyl1Label.setText("Cylinder 1");
+
+        cyl1ButtonOut.setText("Out");
+        cyl1ButtonOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cyl1ButtonOutActionPerformed(evt);
+            }
+        });
+
+        cyl2Label.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        cyl2Label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cyl2Label.setText("Cylinder 2");
+
+        cyl2ButtonOut.setText("Out");
+        cyl2ButtonOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cyl2ButtonOutActionPerformed(evt);
+            }
+        });
+
+        cyl2ButtonIn.setText("In");
+        cyl2ButtonIn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cyl2ButtonInActionPerformed(evt);
+            }
+        });
+
+        cyl3Label.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        cyl3Label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cyl3Label.setText("Cylinder 3");
+
+        cyl3ButtonIn.setText("In");
+        cyl3ButtonIn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cyl3ButtonInActionPerformed(evt);
+            }
+        });
+
+        cyl3ButtonOut.setText("Out");
+        cyl3ButtonOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cyl3ButtonOutActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout CalibrationLayout = new javax.swing.GroupLayout(Calibration.getContentPane());
+        Calibration.getContentPane().setLayout(CalibrationLayout);
+        CalibrationLayout.setHorizontalGroup(
+            CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CalibrationLayout.createSequentialGroup()
+                .addGroup(CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(gifPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(calibrationTitleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(CalibrationLayout.createSequentialGroup()
+                .addGap(156, 156, 156)
+                .addGroup(CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cyl1ButtonIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cyl1Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cyl1ButtonOut, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(92, 92, 92)
+                .addGroup(CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cyl2ButtonOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cyl2ButtonIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cyl2Label, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(91, 91, 91)
+                .addGroup(CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cyl3Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cyl3ButtonOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cyl3ButtonIn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        CalibrationLayout.setVerticalGroup(
+            CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CalibrationLayout.createSequentialGroup()
+                .addComponent(gifPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(calibrationTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addGroup(CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(CalibrationLayout.createSequentialGroup()
+                        .addComponent(cyl1Label)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cyl1ButtonIn)
+                        .addGap(18, 18, 18)
+                        .addComponent(cyl1ButtonOut))
+                    .addGroup(CalibrationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(CalibrationLayout.createSequentialGroup()
+                            .addComponent(cyl2Label)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(cyl2ButtonIn)
+                            .addGap(18, 18, 18)
+                            .addComponent(cyl2ButtonOut))
+                        .addGroup(CalibrationLayout.createSequentialGroup()
+                            .addComponent(cyl3Label)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(cyl3ButtonIn)
+                            .addGap(18, 18, 18)
+                            .addComponent(cyl3ButtonOut))))
+                .addContainerGap(151, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SplitterLine Interface");
@@ -47,6 +216,19 @@ public class SplitterLineUI extends javax.swing.JFrame {
 
         packagesToProcess.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         packagesToProcess.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        packagesToProcess.setMinimumSize(new java.awt.Dimension(266, 303));
+        packagesToProcess.setPreferredSize(new java.awt.Dimension(266, 303));
+        packagesToProcess.setSelectionBackground(new java.awt.Color(255, 153, 0));
+        packagesToProcess.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                packagesToProcessComponentAdded(evt);
+            }
+        });
+        packagesToProcess.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                packagesToProcessValueChanged(evt);
+            }
+        });
         PackageListing.setViewportView(packagesToProcess);
 
         newPackageButton.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
@@ -57,33 +239,125 @@ public class SplitterLineUI extends javax.swing.JFrame {
             }
         });
 
-        packetProgressBar.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        packetProgressBar.setPreferredSize(new java.awt.Dimension(146, 10));
+        statisticsTitle.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        statisticsTitle.setText("STATISTICS");
+
+        totalPacketsLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        totalPacketsLabel.setText("Total Packets:");
+
+        totalPacketsNumberLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        totalPacketsNumberLabel.setText("0");
+        totalPacketsNumberLabel.setName(""); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel1.setText("Package Selected:");
+
+        packageSelectedLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        packageSelectedTypeLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        jLabel2.setText("Package A(%):");
+
+        jLabel3.setText("Package B(%):");
+
+        jLabel4.setText("Package C(%):");
+
+        statA.setText("0%");
+
+        statB.setText("0%");
+
+        statC.setText("0%");
 
         javax.swing.GroupLayout PackagesLayout = new javax.swing.GroupLayout(Packages);
         Packages.setLayout(PackagesLayout);
         PackagesLayout.setHorizontalGroup(
             PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PackagesLayout.createSequentialGroup()
+            .addGroup(PackagesLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
-                .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(newPackageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(packetProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
-                .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(154, 154, 154))
+                .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(statisticsTitle)
+                    .addGroup(PackagesLayout.createSequentialGroup()
+                        .addComponent(newPackageButton)
+                        .addGap(95, 95, 95)
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(PackagesLayout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(totalPacketsLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(totalPacketsNumberLabel))
+                            .addGroup(PackagesLayout.createSequentialGroup()
+                                .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(49, 49, 49)
+                                .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(packageSelectedLabel)
+                                    .addComponent(packageSelectedTypeLabel)))))
+                    .addGroup(PackagesLayout.createSequentialGroup()
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(PackagesLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(statA))
+                            .addGroup(PackagesLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(statB))
+                            .addGroup(PackagesLayout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addComponent(statC)))
+                        .addGap(18, 18, 18)
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(statBProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(statAProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(statCProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         PackagesLayout.setVerticalGroup(
             PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PackagesLayout.createSequentialGroup()
-                .addGap(65, 65, 65)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PackagesLayout.createSequentialGroup()
                 .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(PackagesLayout.createSequentialGroup()
+                        .addGap(65, 65, 65)
                         .addComponent(newPackageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(packetProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(177, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(statisticsTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(PackagesLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PackageListing, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(PackagesLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(packageSelectedLabel)
+                                .addGap(17, 17, 17)
+                                .addComponent(packageSelectedTypeLabel)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(totalPacketsLabel)
+                            .addComponent(totalPacketsNumberLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)))
+                .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PackagesLayout.createSequentialGroup()
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(statA))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(statB))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(statC)))
+                    .addGroup(PackagesLayout.createSequentialGroup()
+                        .addComponent(statAProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(statBProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)
+                        .addComponent(statCProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(81, 81, 81))
         );
 
         jTabbedPane1.addTab("Package Control", Packages);
@@ -113,6 +387,9 @@ public class SplitterLineUI extends javax.swing.JFrame {
             }
         });
 
+        manualTextWarning.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        manualTextWarning.setText("Manual Buttons (Everything you do in Emergency State is nonreversible)");
+
         javax.swing.GroupLayout MaintenanceLayout = new javax.swing.GroupLayout(Maintenance);
         Maintenance.setLayout(MaintenanceLayout);
         MaintenanceLayout.setHorizontalGroup(
@@ -121,14 +398,16 @@ public class SplitterLineUI extends javax.swing.JFrame {
             .addGroup(MaintenanceLayout.createSequentialGroup()
                 .addGroup(MaintenanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(MaintenanceLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(MaintenanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ConveyorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ConveyorText, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(MaintenanceLayout.createSequentialGroup()
                         .addGap(330, 330, 330)
-                        .addComponent(EmergencyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(333, Short.MAX_VALUE))
+                        .addComponent(EmergencyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(MaintenanceLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(MaintenanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(manualTextWarning)
+                            .addGroup(MaintenanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(ConveyorButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ConveyorText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))))
+                .addContainerGap(365, Short.MAX_VALUE))
         );
         MaintenanceLayout.setVerticalGroup(
             MaintenanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,14 +416,19 @@ public class SplitterLineUI extends javax.swing.JFrame {
                 .addComponent(EmergencyButtonText)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(EmergencyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(100, 100, 100)
+                .addGap(55, 55, 55)
+                .addComponent(manualTextWarning)
+                .addGap(30, 30, 30)
                 .addComponent(ConveyorText)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConveyorButton)
-                .addContainerGap(235, Short.MAX_VALUE))
+                .addContainerGap(226, Short.MAX_VALUE))
         );
 
-        ConveyorButton.getAccessibleContext().setAccessibleName("ConveyorButton");
+        ConveyorText.setVisible(false);
+        ConveyorButton.getAccessibleContext().setAccessibleName("");
+        ConveyorButton.setVisible(false);
+        manualTextWarning.setVisible(false);
 
         jTabbedPane1.addTab("Maintenance Menu", Maintenance);
 
@@ -156,7 +440,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -165,34 +449,139 @@ public class SplitterLineUI extends javax.swing.JFrame {
     private void ConveyorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConveyorButtonActionPerformed
         if(ConveyorButton.isSelected()){
             ConveyorButton.setText("ON");
+            this.worker.getMech().moveConveyor();
         }
         else{
             ConveyorButton.setText("OFF");
+            this.worker.getMech().stopConveyor();
         }
     }//GEN-LAST:event_ConveyorButtonActionPerformed
 
     private void EmergencyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmergencyButtonActionPerformed
         if(EmergencyButton.isSelected()){
-          EmergencyButton.setIcon(EmergencyButtonPressed);
-          emergency_meeting();
+            EmergencyButton.setIcon(EmergencyButtonPressed);
+            emergency_meeting();
+            
+            this.manualTextWarning.setVisible(true);
+            this.ConveyorText.setVisible(true);
+            this.ConveyorButton.setVisible(true);
+            
+            this.worker.setEmergency();
         }
         else{
-           EmergencyButton.setIcon(EmergencyButtonNormal);
+            EmergencyButton.setIcon(EmergencyButtonNormal);
+            
+            this.manualTextWarning.setVisible(false);
+            this.ConveyorText.setVisible(false);
+            this.ConveyorButton.setVisible(false);
+            
+            this.worker.endEmergency();
         }
     }//GEN-LAST:event_EmergencyButtonActionPerformed
 
     private void newPackageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPackageButtonActionPerformed
-        packetProgressBar.setValue(0);
-        //getPacket()
-        packetProgressBar.setValue(10);
-        //getIdentification()
-        //first mag sensor packetProgressBar.setValue(30);
-        //Gate sensor packetProgressBar.setValue(70);
-        //sleep(10)
-        //packetProgressBar.setValue(100);
-        //sleep(10)
-        
+        int type = -1;
+        this.worker.setPackage();
+        Packet ghost = new Packet(-1,Integer.parseInt(totalPacketsNumberLabel.getText())+1, this);
+        ghost.start();
+        totalPacketsNumberLabel.setText(String.valueOf(Integer.parseInt(totalPacketsNumberLabel.getText())+1));
     }//GEN-LAST:event_newPackageButtonActionPerformed
+
+    private void packagesToProcessValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packagesToProcessValueChanged
+        // TODO add your handling code here:
+        int number = packagesToProcess.getSelectedValue().getNumber();
+        int type = packagesToProcess.getSelectedValue().getType();
+        String typeLetter = "";
+        switch(type){
+            case 1: typeLetter = "A"; break;
+            case 2: typeLetter = "B"; break;
+            case 3: typeLetter = "C"; break;
+        }
+        packageSelectedLabel.setText("Nº"+String.valueOf(number));
+        packageSelectedTypeLabel.setText("Type: "+typeLetter);
+    }//GEN-LAST:event_packagesToProcessValueChanged
+
+    private void packagesToProcessComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_packagesToProcessComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_packagesToProcessComponentAdded
+
+    private void CalibrationWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_CalibrationWindowClosing
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_CalibrationWindowClosing
+
+    private void cyl1ButtonInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl1ButtonInActionPerformed
+        // TODO add your handling code here:
+        this.calC1.sendDirection(1);
+        this.cyl1Label.setVisible(false);
+        this.cyl1ButtonIn.setVisible(false);
+        this.cyl1ButtonOut.setVisible(false);
+        if(this.calC1.isDone() && this.calC2.isDone() && this.calC3.isDone()){
+            this.Calibration.setVisible(false);
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_cyl1ButtonInActionPerformed
+
+    private void cyl2ButtonInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl2ButtonInActionPerformed
+        // TODO add your handling code here:
+        this.calC2.sendDirection(1);
+        this.cyl2Label.setVisible(false);
+        this.cyl2ButtonIn.setVisible(false);
+        this.cyl2ButtonOut.setVisible(false);
+        if(this.calC1.isDone() && this.calC2.isDone() && this.calC3.isDone()){
+            this.Calibration.setVisible(false);
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_cyl2ButtonInActionPerformed
+
+    private void cyl2ButtonOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl2ButtonOutActionPerformed
+        // TODO add your handling code here:
+        this.calC2.sendDirection(0);
+        this.cyl2Label.setVisible(false);
+        this.cyl2ButtonIn.setVisible(false);
+        this.cyl2ButtonOut.setVisible(false);
+        if(this.calC1.isDone() && this.calC2.isDone() && this.calC3.isDone()){
+            this.Calibration.setVisible(false);
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_cyl2ButtonOutActionPerformed
+
+    private void cyl1ButtonOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl1ButtonOutActionPerformed
+        // TODO add your handling code here:
+        this.calC1.sendDirection(0);
+        this.cyl1Label.setVisible(false);
+        this.cyl1ButtonIn.setVisible(false);
+        this.cyl1ButtonOut.setVisible(false);
+        if(this.calC1.isDone() && this.calC2.isDone() && this.calC3.isDone()){
+            this.Calibration.setVisible(false);
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_cyl1ButtonOutActionPerformed
+
+    private void cyl3ButtonInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl3ButtonInActionPerformed
+        // TODO add your handling code here:
+        this.calC3.sendDirection(1);
+        this.cyl3Label.setVisible(false);
+        this.cyl3ButtonIn.setVisible(false);
+        this.cyl3ButtonOut.setVisible(false);
+        if(this.calC1.isDone() && this.calC2.isDone() && this.calC3.isDone()){
+            this.Calibration.setVisible(false);
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_cyl3ButtonInActionPerformed
+
+    private void cyl3ButtonOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl3ButtonOutActionPerformed
+        // TODO add your handling code here:
+        this.calC3.sendDirection(0);
+        this.cyl3Label.setVisible(false);
+        this.cyl3ButtonIn.setVisible(false);
+        this.cyl3ButtonOut.setVisible(false);
+        if(this.calC1.isDone() && this.calC2.isDone() && this.calC3.isDone()){
+            this.Calibration.setVisible(false);
+            this.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_cyl3ButtonOutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,14 +611,41 @@ public class SplitterLineUI extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        
+        //START WORKER
+        SplitterLineUI instance = new SplitterLineUI();
+        instance.worker();
+        instance.calC1 = new CalibrationThread(instance.worker.getCyl1());
+        instance.calC2 = new CalibrationThread(instance.worker.getCyl2());
+        instance.calC3 = new CalibrationThread(instance.worker.getCyl3());
+        instance.stats = new PacketStatistics();
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SplitterLineUI().setVisible(true);
+                instance.Calibration.setVisible(true);
+                instance.gifHolder.setIcon(DroneGif);
+                //instance.setVisible(true);
             }
         });
-        
     }
 
+    public void worker(){
+        this.worker = new mainThread();
+        SplitterLine.initializeHardwarePorts();
+        //mainThread.Calibration();
+        this.worker.start();
+        ledThread LT = null;
+        
+    }
+    
+    public void endWorker(){
+        try {
+            this.worker.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SplitterLineUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void emergency_meeting(){
         InputStream sound;
         try{
@@ -242,30 +658,36 @@ public class SplitterLineUI extends javax.swing.JFrame {
         }
     }
     
-    private void newPacketReg(int type){
+    public void newPacketReg(int type, int number, javax.swing.JList<Packet> packagesToProcessLocal){
         try{
             List<Packet> list = new ArrayList<>(); 
-            for(int i = 0; i< packagesToProcess.getModel().getSize();i++){
-                list.add(packagesToProcess.getModel().getElementAt(i));
+            for(int i = 0; i< packagesToProcessLocal.getModel().getSize();i++){
+                list.add(packagesToProcessLocal.getModel().getElementAt(i));
             }
             
-            Packet newP = new Packet(type);
+            Packet newP = new Packet(type, number, null);
             list.add(newP);
             
             Packet[] nlist = new Packet[list.size()];
             nlist = list.toArray(nlist);
             
-            packagesToProcess.setListData(nlist);
+            packagesToProcessLocal.setListData(nlist);
         }
         catch(Exception e){
             System.out.println(e);
         }
     }
     
-    private Icon EmergencyButtonNormal = new ImageIcon("./images/ButtonNormal.png");
-    private Icon EmergencyButtonPressed = new ImageIcon("./images/ButtonPressed.png");
+    public javax.swing.JList<Packet> getPackagesToProcess(){
+        return packagesToProcess;
+    }
+    
+    private static Icon EmergencyButtonNormal = new ImageIcon("./images/ButtonNormal.png");
+    private static Icon EmergencyButtonPressed = new ImageIcon("./images/ButtonPressed.png");
+    private static Icon DroneGif = new ImageIcon("./images/drone.gif");
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFrame Calibration;
     private javax.swing.JToggleButton ConveyorButton;
     private javax.swing.JLabel ConveyorText;
     private javax.swing.JToggleButton EmergencyButton;
@@ -273,10 +695,37 @@ public class SplitterLineUI extends javax.swing.JFrame {
     private javax.swing.JPanel Maintenance;
     private javax.swing.JScrollPane PackageListing;
     private javax.swing.JPanel Packages;
+    private javax.swing.JLabel calibrationTitleLabel;
+    private javax.swing.JButton cyl1ButtonIn;
+    private javax.swing.JButton cyl1ButtonOut;
+    private javax.swing.JLabel cyl1Label;
+    private javax.swing.JButton cyl2ButtonIn;
+    private javax.swing.JButton cyl2ButtonOut;
+    private javax.swing.JLabel cyl2Label;
+    private javax.swing.JButton cyl3ButtonIn;
+    private javax.swing.JButton cyl3ButtonOut;
+    private javax.swing.JLabel cyl3Label;
+    private javax.swing.JLabel gifHolder;
+    private javax.swing.JPanel gifPanel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel manualTextWarning;
     private javax.swing.JButton newPackageButton;
+    private javax.swing.JLabel packageSelectedLabel;
+    private javax.swing.JLabel packageSelectedTypeLabel;
     private javax.swing.JList<Packet> packagesToProcess;
-    private javax.swing.JProgressBar packetProgressBar;
+    public javax.swing.JLabel statA;
+    public javax.swing.JProgressBar statAProgressBar;
+    public javax.swing.JLabel statB;
+    public javax.swing.JProgressBar statBProgressBar;
+    public javax.swing.JLabel statC;
+    public javax.swing.JProgressBar statCProgressBar;
+    private javax.swing.JLabel statisticsTitle;
+    private javax.swing.JLabel totalPacketsLabel;
+    private javax.swing.JLabel totalPacketsNumberLabel;
     // End of variables declaration//GEN-END:variables
 
 }

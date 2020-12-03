@@ -16,10 +16,12 @@ public class Cylinder3 implements Cylinder {
         return this.cylSem;
     }
     
+    @Override
     public void setEmergency() {
         this.flag = true;
     }
     
+    @Override
     public void endEmergency() {
         this.flag = false;
         this.cylSem.release();

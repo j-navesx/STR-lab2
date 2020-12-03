@@ -21,19 +21,22 @@ public class mainThread extends Thread{
     private SwitchThread ST3 = null;
     private Mechanism mech = null;
     private int packageType = -1;
+    private Semaphore typeSync = null;
+    private ledThread LT = null;
     
     public mainThread() {
         this.mech = new Mechanism();
         
-        this.semSynch= new Semaphore(0);
+        this.semSynch = new Semaphore(0);
+        this.typeSync = new Semaphore(0);
         
-        this.cyl1= new Cylinder1();
-        this.cyl2= new Cylinder2();
-        this.cyl3= new Cylinder3();
+        this.cyl1 = new Cylinder1();
+        this.cyl2 = new Cylinder2();
+        this.cyl3 = new Cylinder3();
         
-        this.DT3= new dockThread(cyl1, null, false, mech);
-        this.DT1= new dockThread(cyl2, DT3, true, mech);
-        this.DT2= new dockThread(cyl3, DT3, true, mech);
+        this.DT3 = new dockThread(cyl1, null, false, mech);
+        this.DT1 = new dockThread(cyl2, DT3, true, mech);
+        this.DT2 = new dockThread(cyl3, DT3, true, mech);
         
         this.ST1 = new SwitchThread(1, DT1);
         this.ST2 = new SwitchThread(2, DT2);
@@ -70,6 +73,9 @@ public class mainThread extends Thread{
         this.cyl1.setEmergency();
         this.cyl2.setEmergency();
         this.cyl3.setEmergency();
+        
+        this.LT = new ledThread(this.mech,400,400);
+        this.LT.start();
     }
     
     public void endEmergency() {
@@ -77,10 +83,16 @@ public class mainThread extends Thread{
         this.cyl2.endEmergency();
         this.cyl3.endEmergency();
         this.mech.moveConveyor();
+        
+        this.LT.setLedOff();
     }
     
     public Semaphore getSemSynch() {
         return semSynch;
+    }
+    
+    public Semaphore getTypeSynch(){
+        return typeSync;
     }
     
     public void setPackage() {
@@ -165,6 +177,7 @@ public class mainThread extends Thread{
                     this.packageType = -1;
                     type = getPackage();   
                     this.packageType = type;
+                    this.typeSync.release();
                     
                     if(type == 1) {
                         if(DT1.getDockState()) {

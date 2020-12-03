@@ -6,7 +6,10 @@ public class PacketStatistics {
     private int packsTotal;
     
     public PacketStatistics(){
-        
+        packs1 = 0;
+        packs2 = 0;
+        packs3 = 0;
+        packsTotal = 0;
     }
     
     public void addStat(int type){
