@@ -23,6 +23,7 @@ public class mainThread extends Thread{
     private int packageType = -1;
     private Semaphore typeSync = null;
     private ledThread LT = null;
+    private boolean emergencyFlag = false;
     
     public mainThread() {
         this.mech = new Mechanism();
@@ -69,6 +70,8 @@ public class mainThread extends Thread{
     }
     
     public void setEmergency() {
+        this.emergencyFlag = true;
+        
         this.mech.stopConveyor();
         this.cyl1.setEmergency();
         this.cyl2.setEmergency();
@@ -79,12 +82,47 @@ public class mainThread extends Thread{
     }
     
     public void endEmergency() {
+        this.emergencyFlag = false;
+        
         this.cyl1.endEmergency();
         this.cyl2.endEmergency();
         this.cyl3.endEmergency();
         this.mech.moveConveyor();
         
         this.LT.setLedOff();
+    }
+    
+    public void endThreads() {
+        try {
+            Semaphore sem= getSemSynch();
+            Semaphore semDT1= DT1.getSemSynch();
+            Semaphore semDT2= DT2.getSemSynch();
+            Semaphore semDT3= DT3.getSemSynch();
+            
+            setInterrupted(true);
+            sem.release();
+            
+            this.DT1.setInterrupted(true);
+            this.DT2.setInterrupted(true);
+            this.DT3.setInterrupted(true);
+            semDT1.release();
+            semDT2.release();
+            semDT3.release();
+            this.DT1.join();
+            this.DT2.join();
+            this.DT3.join();
+            
+            this.ST1.setInterrupted(true);
+            this.ST2.setInterrupted(true);
+            this.ST3.setInterrupted(true);
+            this.ST1.join();
+            this.ST2.join();
+            this.ST3.join();
+            
+            this.mech.stopConveyor();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(mainThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public Semaphore getSemSynch() {
@@ -125,6 +163,14 @@ public class mainThread extends Thread{
         return packageType; 
     }
     
+    public boolean getDT3state(){
+        return this.DT3.getDockState();
+    }
+    
+    public boolean getEmergencystate(){
+        return this.emergencyFlag;
+    }
+    
     @Override
     public void run() {
         mech.moveConveyor();
@@ -148,11 +194,13 @@ public class mainThread extends Thread{
         while(!interrupted) {
             try {
                 sem.acquire();
-                while(this.cyl2.packageGetDetected() || this.cyl2.getPosition() != 0) {
-                    Thread.sleep(500);
-                }
                 
                 if(!interrupted) {
+                    
+                    while(this.cyl2.packageGetDetected() || this.cyl2.getPosition() != 0) {
+                        Thread.sleep(500);
+                    }
+                    
                     this.packageType = -1;
                     type = getPackage();   
                     this.packageType = type;

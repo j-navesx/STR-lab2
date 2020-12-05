@@ -480,10 +480,12 @@ public class SplitterLineUI extends javax.swing.JFrame {
     }//GEN-LAST:event_EmergencyButtonActionPerformed
 
     private void newPackageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPackageButtonActionPerformed
-        this.worker.setPackage();
-        Packet ghost = new Packet(-1,Integer.parseInt(totalPacketsNumberLabel.getText())+1, this);
-        ghost.start();
-        totalPacketsNumberLabel.setText(String.valueOf(Integer.parseInt(totalPacketsNumberLabel.getText())+1));
+        if(this.worker.getDT3state() && !this.worker.getEmergencystate()) {    
+            this.worker.setPackage();
+            Packet ghost = new Packet(-1,Integer.parseInt(totalPacketsNumberLabel.getText())+1, this);
+            ghost.start();
+            totalPacketsNumberLabel.setText(String.valueOf(Integer.parseInt(totalPacketsNumberLabel.getText())+1));
+        }
     }//GEN-LAST:event_newPackageButtonActionPerformed
 
     private void packagesToProcessValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packagesToProcessValueChanged
@@ -574,7 +576,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cyl3ButtonOutActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        
+        this.worker.endThreads();
     }//GEN-LAST:event_formWindowClosing
 
     /**

@@ -42,6 +42,10 @@ public class dockThread extends Thread{
         return interrupted; 
     }
     
+    public void setInterrupted(boolean interrupted) {
+        this.interrupted = interrupted;
+    }
+    
     public void setDockState() {
         this.blocked = !this.blocked;
         if(flag == false && blocked == true) {
@@ -70,45 +74,48 @@ public class dockThread extends Thread{
             try {
                 //Received signal
                 sem.acquire();
-
-                //Wait for gate2 to activate
-                while(!cyl.packageGetDetected()) {
-                    Thread.yield();
-                }
-                if(!DT3.getDockState() && flag) {
-                    mech.stopConveyor();
-                    while(!DT3.getDockState() && flag) {
+                
+                if(!interrupted) {
+                    //Wait for gate2 to activate
+                    while(!cyl.packageGetDetected()) {
                         Thread.yield();
                     }
-                    mech.moveConveyor();
-                }
-                if(blocked == false) {
-                    if(queue.take() == cyl.getPkgNumber()) {
-                        
-                        CylinderThread ct =  new CylinderThread(cyl);
-                        ct.start();
+                    
+                    if(!DT3.getDockState() && flag) {
+                        mech.stopConveyor();
+                        while(!DT3.getDockState() && flag) {
+                            Thread.yield();
+                        }
+                        mech.moveConveyor();
+                    }
+                    
+                    if(blocked == false) {
+                        if(queue.take() == cyl.getPkgNumber()) {
 
-                        try {
-                            ct.join();
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(dockThread.class.getName()).log(Level.SEVERE, null, ex);
-                        }  
+                            CylinderThread ct =  new CylinderThread(cyl);
+                            ct.start();
+
+                            try {
+                                ct.join();
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(dockThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }  
+                        } 
                     } 
-                } 
-                else {
-                    ledAUX = queue.take();
-                    System.out.printf("\n%d",ledAUX);
-                    if(ledAUX != 3) {
-                        LT = new ledThread(this.mech,2000,0); //2000 milisecond impulse
-                        LT.start();
+                    else {
+                        ledAUX = queue.take();
+                        System.out.printf("\n%d",ledAUX);
+                        if(ledAUX != 3) {
+                            LT = new ledThread(this.mech,2000,0); //2000 milisecond impulse
+                            LT.start();
+                        }
+                    }
+
+                    //Wait for gate2 to deactivate
+                    while(cyl.packageGetDetected()) {
+                        Thread.yield();
                     }
                 }
-                
-                //Wait for gate2 to deactivate
-                while(cyl.packageGetDetected()) {
-                    Thread.yield();
-                }
-                
             } catch (InterruptedException ex) {
                 Logger.getLogger(dockThread.class.getName()).log(Level.SEVERE, null, ex);
             }
