@@ -43,7 +43,6 @@ public class Packet extends Thread {
             Logger.getLogger(SplitterLineUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         type = UI.worker.getPackageType();
-        System.out.println(type);
         try {
             Thread.sleep(10);
         } catch (InterruptedException ex) {
@@ -57,14 +56,6 @@ public class Packet extends Thread {
         float sA = (UI.stats.getStats()[0]*100)/UI.stats.getStats()[3];
         float sB = (UI.stats.getStats()[1]*100)/UI.stats.getStats()[3];
         float sC = (UI.stats.getStats()[2]*100)/UI.stats.getStats()[3];
-        
-        System.out.println(sA);
-        System.out.println(sB);
-        System.out.println(sC);
-        System.out.println(UI.stats.getStats()[0]);
-        System.out.println(UI.stats.getStats()[1]);
-        System.out.println(UI.stats.getStats()[2]);
-        System.out.println(UI.stats.getStats()[3]);
         
         UI.statA.setText(String.valueOf(sA)+"%");
         UI.statB.setText(String.valueOf(sB)+"%");

@@ -213,17 +213,17 @@ public class SplitterLineUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SplitterLine Interface");
         setSize(new java.awt.Dimension(800, 450));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         packagesToProcess.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         packagesToProcess.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         packagesToProcess.setMinimumSize(new java.awt.Dimension(266, 303));
         packagesToProcess.setPreferredSize(new java.awt.Dimension(266, 303));
         packagesToProcess.setSelectionBackground(new java.awt.Color(255, 153, 0));
-        packagesToProcess.addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentAdded(java.awt.event.ContainerEvent evt) {
-                packagesToProcessComponentAdded(evt);
-            }
-        });
         packagesToProcess.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 packagesToProcessValueChanged(evt);
@@ -311,7 +311,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
                             .addComponent(statBProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(statAProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(statCProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         PackagesLayout.setVerticalGroup(
             PackagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -407,7 +407,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
                             .addGroup(MaintenanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(ConveyorButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(ConveyorText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))))
-                .addContainerGap(365, Short.MAX_VALUE))
+                .addContainerGap(378, Short.MAX_VALUE))
         );
         MaintenanceLayout.setVerticalGroup(
             MaintenanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -461,7 +461,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
         if(EmergencyButton.isSelected()){
             EmergencyButton.setIcon(EmergencyButtonPressed);
             emergency_meeting();
-            
+            //Manual Components Visible
             this.manualTextWarning.setVisible(true);
             this.ConveyorText.setVisible(true);
             this.ConveyorButton.setVisible(true);
@@ -470,7 +470,7 @@ public class SplitterLineUI extends javax.swing.JFrame {
         }
         else{
             EmergencyButton.setIcon(EmergencyButtonNormal);
-            
+            //Manual Components Invisible
             this.manualTextWarning.setVisible(false);
             this.ConveyorText.setVisible(false);
             this.ConveyorButton.setVisible(false);
@@ -480,7 +480,6 @@ public class SplitterLineUI extends javax.swing.JFrame {
     }//GEN-LAST:event_EmergencyButtonActionPerformed
 
     private void newPackageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPackageButtonActionPerformed
-        int type = -1;
         this.worker.setPackage();
         Packet ghost = new Packet(-1,Integer.parseInt(totalPacketsNumberLabel.getText())+1, this);
         ghost.start();
@@ -488,7 +487,6 @@ public class SplitterLineUI extends javax.swing.JFrame {
     }//GEN-LAST:event_newPackageButtonActionPerformed
 
     private void packagesToProcessValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packagesToProcessValueChanged
-        // TODO add your handling code here:
         int number = packagesToProcess.getSelectedValue().getNumber();
         int type = packagesToProcess.getSelectedValue().getType();
         String typeLetter = "";
@@ -501,17 +499,11 @@ public class SplitterLineUI extends javax.swing.JFrame {
         packageSelectedTypeLabel.setText("Type: "+typeLetter);
     }//GEN-LAST:event_packagesToProcessValueChanged
 
-    private void packagesToProcessComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_packagesToProcessComponentAdded
-        // TODO add your handling code here:
-    }//GEN-LAST:event_packagesToProcessComponentAdded
-
     private void CalibrationWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_CalibrationWindowClosing
-        // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_CalibrationWindowClosing
 
     private void cyl1ButtonInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl1ButtonInActionPerformed
-        // TODO add your handling code here:
         this.calC1.sendDirection(1);
         this.cyl1Label.setVisible(false);
         this.cyl1ButtonIn.setVisible(false);
@@ -523,7 +515,6 @@ public class SplitterLineUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cyl1ButtonInActionPerformed
 
     private void cyl2ButtonInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl2ButtonInActionPerformed
-        // TODO add your handling code here:
         this.calC2.sendDirection(1);
         this.cyl2Label.setVisible(false);
         this.cyl2ButtonIn.setVisible(false);
@@ -535,7 +526,6 @@ public class SplitterLineUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cyl2ButtonInActionPerformed
 
     private void cyl2ButtonOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyl2ButtonOutActionPerformed
-        // TODO add your handling code here:
         this.calC2.sendDirection(0);
         this.cyl2Label.setVisible(false);
         this.cyl2ButtonIn.setVisible(false);
@@ -582,6 +572,10 @@ public class SplitterLineUI extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_cyl3ButtonOutActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -632,18 +626,9 @@ public class SplitterLineUI extends javax.swing.JFrame {
     public void worker(){
         this.worker = new mainThread();
         SplitterLine.initializeHardwarePorts();
-        //mainThread.Calibration();
         this.worker.start();
         ledThread LT = null;
         
-    }
-    
-    public void endWorker(){
-        try {
-            this.worker.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SplitterLineUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     private void emergency_meeting(){

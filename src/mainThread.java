@@ -125,28 +125,6 @@ public class mainThread extends Thread{
         return packageType; 
     }
     
-    static public void Calibration() {
-        Cylinder1 cyl1= new Cylinder1();
-        Cylinder2 cyl2= new Cylinder2();
-        Cylinder3 cyl3= new Cylinder3();
-        
-        cyl1.moveForward();
-        while(cyl1.getPosition() != 0) {
-            Thread.yield();
-        }
-        cyl1.stop();
-        cyl2.moveForward();
-        while(cyl2.getPosition() != 0) {
-            Thread.yield();
-        }
-        cyl2.stop();
-        cyl3.moveForward();
-        while(cyl3.getPosition() != 0) {
-            Thread.yield();
-        }
-        cyl3.stop();
-    }
-    
     @Override
     public void run() {
         mech.moveConveyor();
@@ -162,6 +140,7 @@ public class mainThread extends Thread{
         Semaphore semDT2= DT2.getSemSynch();
         ArrayBlockingQueue queueDT1= DT1.getQueue();
         ArrayBlockingQueue queueDT2= DT2.getQueue();
+        
         int type= -1;
   
         this.setInterrupted(false);
@@ -215,35 +194,4 @@ public class mainThread extends Thread{
         }
     }
     
-    static public void main(String[] args) throws InterruptedException {
-        mainThread worker = new mainThread();
-        SplitterLine.initializeHardwarePorts();
-        Calibration();
-        worker.start();
-        ledThread LT = null;
-        
-        int t= -1;
-        
-        while(t != 0) {
-            System.out.print("Enter an option then enter : ");
-            Scanner scan = new Scanner (System.in);
-            t = scan.nextInt(); scan.nextLine();
-            switch(t) {
-                case 2: worker.setPackage();
-                worker.setPackage(); 
-                worker.setPackage(); 
-                worker.setPackage(); 
-                worker.setPackage(); 
-                worker.setPackage(); break;
-                case 1: worker.setPackage(); break;
-                case 3: LT = new ledThread(worker.mech,1000,0); LT.start(); break;
-            }
-        }
-        
-        try {
-            worker.join();
-        } catch (InterruptedException ex) {}
-        worker.setInterrupted(true);
-        System.out.println("\nShutdown");
-    } 
 }
